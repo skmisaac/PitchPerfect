@@ -2,6 +2,8 @@
 //  RecordSoundsViewController.swift
 //  PitchPerfect
 //
+//  This is a recording view to let user record their voice by tapping the microphone image
+//
 //  Created by SUN Ka Meng Isaac on 30/6/15.
 //  Copyright (c) 2015 SUN Ka Meng Isaac. All rights reserved.
 //
@@ -13,6 +15,7 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     var audioRecorder: AVAudioRecorder!
     var recordedAudio: RecordedAudio!
+    var audioSession:  AVAudioSession!
     
     @IBOutlet weak var recordButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
@@ -20,11 +23,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
 
     }
 
@@ -41,7 +39,8 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         let filePath = NSURL.fileURLWithPathComponents(pathArray)
         println(filePath)
         
-        var session = AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .DefaultToSpeaker, error: nil)
+        audioSession = AVAudioSession.sharedInstance()
+        audioSession.setCategory(AVAudioSessionCategoryPlayAndRecord, withOptions: .DefaultToSpeaker, error: nil)
         
         audioRecorder = AVAudioRecorder(URL: filePath, settings: nil, error: nil)
         audioRecorder.delegate = self
@@ -51,25 +50,27 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         
         recordingLabel.text = "Recording in Progress..."
         stopButton.hidden = false
-        println("is recording");
     }
     
     @IBAction func stopAudio(sender: UIButton) {
         audioRecorder.stop()
-        var audioSession = AVAudioSession.sharedInstance()
         audioSession.setActive(false, error: nil)
         recordingLabel.text = "Finished Recording"
-        println("finished recording")
     }
     
     func audioRecorderDidFinishRecording(recorder: AVAudioRecorder!, successfully flag: Bool) {
         if (flag) {
             recordedAudio = RecordedAudio(title: recorder.url.lastPathComponent, filePathUrl: recorder.url)
             self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
-            println("finished recording successfully")
         }
         else {
-            println("Recording was not successful")
+            // Show user an alert of failed recording
+            let alertController = UIAlertController(title: "Error", message:
+                "Recording was unsuccessful", preferredStyle: UIAlertControllerStyle.Alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.Default, handler: nil))
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
+            // reset button and label states
             recordButton.enabled = true
             stopButton.hidden = true
             recordingLabel.hidden = true

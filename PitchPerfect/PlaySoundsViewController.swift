@@ -2,6 +2,8 @@
 //  PlaySoundsViewController.swift
 //  PitchPerfect
 //
+//  This is recording playback view for user to choose different playback styles e.g.: slow, fast, chipmunk and Darth Vader style
+//
 //  Created by SUN Ka Meng Isaac on 30/6/15.
 //  Copyright (c) 2015 SUN Ka Meng Isaac. All rights reserved.
 //
@@ -9,29 +11,31 @@
 import UIKit
 import AVFoundation
 
-class PlaySoundsViewController: UIViewController {
+class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     
     var audioPlayer: AVAudioPlayer!
     var audioEngine: AVAudioEngine!
     var audioFile: AVAudioFile!
     var receivedAudio: RecordedAudio!
 
+    @IBOutlet weak var stopButton: UIButton!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         audioEngine = AVAudioEngine()
         audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
         audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        audioPlayer.delegate = self
         audioPlayer.enableRate = true
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    override func viewWillAppear(animated: Bool) {
+        stopButton.hidden = true
     }
     
     func playAudio() {
         allAudioStopAndReset()
+        stopButton.hidden = false
         audioPlayer.currentTime = 0.0
         audioPlayer.play()
     }
@@ -39,13 +43,11 @@ class PlaySoundsViewController: UIViewController {
     @IBAction func playSlowAudio(sender: UIButton) {
         audioPlayer.rate = 0.5
         playAudio()
-        println("is playing in slow")
     }
     
     @IBAction func playFastAudio(sender: UIButton) {
         audioPlayer.rate = 2.0
         playAudio()
-        println("is playing in fast")
     }
     
     @IBAction func playChipMunkAudio(sender: UIButton) {
@@ -56,6 +58,7 @@ class PlaySoundsViewController: UIViewController {
         allAudioStopAndReset()
     }
     
+    // to stop all AV Audio Playback before play any sound
     func allAudioStopAndReset() {
         audioPlayer.stop()
         audioEngine.stop()
@@ -75,9 +78,14 @@ class PlaySoundsViewController: UIViewController {
         audioEngine.connect(audioPlayerNode, to: changePitchEffect, format: nil)
         audioEngine.connect(changePitchEffect, to: audioEngine.outputNode, format: nil)
         
-        audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
+        // using trailing closure to hide the button (has delay to hide the button but works)
+        audioPlayerNode.scheduleFile(audioFile, atTime: nil) {
+            self.stopButton.hidden = true
+        }
+        
         audioEngine.startAndReturnError(nil)
         
+        stopButton.hidden = false
         audioPlayerNode.play()
     }
     
@@ -86,14 +94,9 @@ class PlaySoundsViewController: UIViewController {
         playAudioWithVariablePitch(-1000)
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
+        if (flag) {
+            stopButton.hidden = true
+        }
     }
-    */
-
 }
