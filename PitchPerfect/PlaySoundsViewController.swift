@@ -22,6 +22,8 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // initialization of AVAudio Classes
         audioEngine = AVAudioEngine()
         audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
         audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
@@ -30,6 +32,7 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         stopButton.hidden = true
     }
     
@@ -42,20 +45,12 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     
     @IBAction func playSlowAudio(sender: UIButton) {
         audioPlayer.rate = 0.5
-        playAudio()
+        playAudio()     // call the common func at line 37 to finish the playing task
     }
     
     @IBAction func playFastAudio(sender: UIButton) {
         audioPlayer.rate = 2.0
-        playAudio()
-    }
-    
-    @IBAction func playChipMunkAudio(sender: UIButton) {
-        playAudioWithVariablePitch(1000)
-    }
-
-    @IBAction func stop(sender: UIButton) {
-        allAudioStopAndReset()
+        playAudio()     // call the common func at line 37 to finish the playing task
     }
     
     // to stop all AV Audio Playback before play any sound
@@ -89,11 +84,43 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
         audioPlayerNode.play()
     }
     
-
+    @IBAction func playWithReverbAudio(sender: UIButton) {
+        allAudioStopAndReset()
+        
+        var audioPlayerNode = AVAudioPlayerNode()
+        audioEngine.attachNode(audioPlayerNode)
+        
+        var reverbEffect = AVAudioUnitReverb()
+        reverbEffect.loadFactoryPreset(AVAudioUnitReverbPreset.Cathedral)
+        audioEngine.attachNode(reverbEffect)
+        
+        audioEngine.connect(audioPlayerNode, to: reverbEffect, format: nil)
+        audioEngine.connect(reverbEffect, to: audioEngine.outputNode, format: nil)
+        
+        audioPlayerNode.scheduleFile(audioFile, atTime: nil) {
+            self.stopButton.hidden = true
+        }
+        
+        audioEngine.startAndReturnError(nil)
+        
+        stopButton.hidden = false
+        audioPlayerNode.play()
+    }
+    
     @IBAction func playDarthVaderAudio(sender: UIButton) {
         playAudioWithVariablePitch(-1000)
     }
     
+    @IBAction func playChipMunkAudio(sender: UIButton) {
+        playAudioWithVariablePitch(1000)
+    }
+
+    @IBAction func stop(sender: UIButton) {
+        allAudioStopAndReset()
+    }
+    
+
+    // MARK: - delegate method implementation
     func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
         if (flag) {
             stopButton.hidden = true
