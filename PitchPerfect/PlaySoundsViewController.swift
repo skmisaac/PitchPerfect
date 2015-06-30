@@ -31,7 +31,7 @@ class PlaySoundsViewController: UIViewController {
     }
     
     func playAudio() {
-        audioPlayer.stop()
+        allAudioStopAndReset()
         audioPlayer.currentTime = 0.0
         audioPlayer.play()
     }
@@ -53,13 +53,17 @@ class PlaySoundsViewController: UIViewController {
     }
 
     @IBAction func stop(sender: UIButton) {
-        audioPlayer.stop()
+        allAudioStopAndReset()
     }
     
-    func playAudioWithVariablePitch(pitch: Float){
+    func allAudioStopAndReset() {
         audioPlayer.stop()
         audioEngine.stop()
         audioEngine.reset()
+    }
+    
+    func playAudioWithVariablePitch(pitch: Float){
+        allAudioStopAndReset()
         
         var audioPlayerNode = AVAudioPlayerNode()
         audioEngine.attachNode(audioPlayerNode)

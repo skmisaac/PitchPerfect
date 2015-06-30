@@ -51,21 +51,21 @@
                                     <action selector="stopAudio:" destination="p8r-zy-H1O" eventType="touchUpInside" id="MIS-WH-EEe"/>
                                 </connections>
                             </button>
-                            <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Recording" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B9J-zK-Kn8">
-                                <rect key="frame" x="254" y="338" width="79" height="21"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tap to Record" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="B9J-zK-Kn8">
+                                <rect key="frame" x="240" y="338" width="108" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerY" secondItem="n4L-yo-d7z" secondAttribute="centerY" constant="50" id="7cQ-1t-fZ0"/>
                             <constraint firstItem="B9J-zK-Kn8" firstAttribute="top" secondItem="n4L-yo-d7z" secondAttribute="bottom" constant="38" id="Je8-cB-93Y"/>
                             <constraint firstAttribute="centerX" secondItem="n4L-yo-d7z" secondAttribute="centerX" constant="7" id="Kst-66-jPW"/>
                             <constraint firstAttribute="centerY" secondItem="Xf7-K1-dDF" secondAttribute="centerY" constant="-165" id="owB-W9-SLl"/>
                             <constraint firstAttribute="centerX" secondItem="Xf7-K1-dDF" secondAttribute="centerX" constant="6.5" id="rAb-jB-oyR"/>
-                            <constraint firstAttribute="centerX" secondItem="B9J-zK-Kn8" secondAttribute="centerX" constant="7" id="uhU-3B-f4n"/>
+                            <constraint firstAttribute="centerX" secondItem="B9J-zK-Kn8" secondAttribute="centerX" constant="6" id="uhU-3B-f4n"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="tBG-5M-W7M"/>
@@ -138,7 +138,7 @@
                                 </connections>
                             </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" red="0.0" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
                             <constraint firstItem="wqg-WW-y5c" firstAttribute="leading" secondItem="jRl-Hl-LN4" secondAttribute="leadingMargin" constant="50" id="GlR-Mw-Cvu"/>
                             <constraint firstItem="BeH-O3-BXd" firstAttribute="top" secondItem="tN1-hT-JF0" secondAttribute="bottom" constant="90" id="PJV-Ss-Q0x"/>
